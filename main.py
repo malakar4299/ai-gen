@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 import base64
 import time
+import argparse
 
 # Load environment variables from .env file
 load_dotenv()
@@ -21,7 +22,13 @@ topic_headers = headers.copy()  # Make a copy of the existing headers
 topic_headers["Accept"] = "application/vnd.github.mercy-preview+json"  # Modify or add the specific header
 
 
-organizations = ["microsoft"]  # Example organizations , "google-research", "microsoft", "apple", "facebookresearch", "amazon-science", "google-deepmind"
+# organizations = ["microsoft"]  # Example organizations , "google-research", "microsoft", "apple", "facebookresearch", "amazon-science", "google-deepmind"
+
+def get_arguments():
+    parser = argparse.ArgumentParser(description='Fetch GitHub repository data for specified organizations.')
+    parser.add_argument('--orgs', type=str, help='Path to a text file containing organization names, one per line.', required=True)
+    args = parser.parse_args()
+    return args
 
 def get_response_with_rate_limit(url, headers):
     response = requests.get(url, headers=headers)
@@ -112,6 +119,20 @@ def append_to_json(data, filename="repo_details.json"):
     print("JSON append operation completed.")
 
 def main():
+    args = get_arguments()
+    orgs_file_path = args.orgs
+    # Default organization list to fall back on
+    default_organizations = ["microsoft", "google-research", "apple", "facebookresearch", "amazon-science", "google-deepmind"]
+    organizations = []
+
+    if orgs_file_path and os.path.exists(orgs_file_path):
+        # Read organization names from the text file if it exists
+        with open(orgs_file_path, 'r') as file:
+            organizations = [line.strip() for line in file if line.strip()]
+    else:
+        # Fall back to the default list if the file does not exist or is not specified
+        organizations = default_organizations
+                 
     repo_summary = []
     repo_details = []
 

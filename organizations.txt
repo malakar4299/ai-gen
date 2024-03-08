@@ -1,0 +1,6 @@
+microsoft
+google-research
+apple
+facebookresearch
+amazon-science
+google-deepmind
