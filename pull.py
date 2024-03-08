@@ -21,7 +21,7 @@ topic_headers = headers.copy()  # Make a copy of the existing headers
 topic_headers["Accept"] = "application/vnd.github.mercy-preview+json"  # Modify or add the specific header
 
 
-organizations = ["google-research"]  # Example organizations , "google-research", "microsoft", "apple", "facebookresearch", "amazon-science"
+organizations = ["microsoft"]  # Example organizations , "google-research", "microsoft", "apple", "facebookresearch", "amazon-science", "google-deepmind"
 
 def get_response_with_rate_limit(url, headers):
     response = requests.get(url, headers=headers)
@@ -37,7 +37,7 @@ def get_repos(org):
     print("Fetching Repo's")
     """Fetch all repositories for a given organization."""
     repos = []
-    page = 1
+    page = 51
     while True:
         url = f"https://api.github.com/users/{org}/repos?page={page}&per_page=100"
         response = get_response_with_rate_limit(url, headers=headers)
